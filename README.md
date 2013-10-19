@@ -1,6 +1,7 @@
 formulario de contacto php
 =============
 
+<a href="http://hacerpatito.com/formulario_de_contacto_php/"> http://hacerpatito.com/formulario_de_contacto_php/</a>
 Con este formulario puedes crear un  formulario de contacto y recibir los datos cargados por el usuario  en una casilla de mail.
 
 En un archivo se cargan los datos  (formulario) y cuando el usuario hace clik en enviar si completo con un mail 
