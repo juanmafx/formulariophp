@@ -1,11 +1,17 @@
 Formulario de contacto php SUPER EFICIENTE 
 =============
 
+Ver demo del formlulario <a href="http://hacerpatito.com/formulario_de_contacto_php/">Aqui</a>
+
+
 Con estos dos archivos  vas a crear  un  formulario de contacto y recibir los datos cargados por el usuario  en una casilla de mail (osea un e-mail).
 
 En un archivo se cargan los datos  (formulario) y cuando el usuario hace clik en enviar si completo con un mail 
 que posiblemente sea real.
 El formulario te envía a un nuevo archivo de confirmacion.
+
+
+
 
 Puedes configurar una respuesta automática desde ese mail que recibiste el correo , algo como:
 
