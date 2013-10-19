@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="utf-8">
-<title>Confirmacion</title>
+<title>Confirmacion de envio formulario</title>
 <link rel="stylesheet" href="css.css">
 </head>
 <body>
@@ -53,14 +53,18 @@ return(mail($sPara, $sAsunto, $sTexto, $sCabeceras));
 }
 
 //cambiar aqui el email 
-if (form_mail("juanm_ramallo@hotmail.com", $_POST[asunto], 
+if (form_mail("TUEMAIL@LOQUESEA", $_POST[asunto], 
 "Los datos introducidos en el formulario son:\n\n", $_POST[email])) 
 echo "
-
-    <h1>Su formulario ha sido enviado con exito </h1>
-<p>Saludos.<br>
-El rey del seo</p>
-
+ <h1>Su formulario fue enviado con exito </h1>
+<form>   
+<p>Muchas gracias <br>
+O lo que tu quieras poner los que sea!<br>
+Solo realiza el cambiio en este texto!<br>
+<br>
+Saludos el equipo de ..lo que seas..
+</p>
+</form>
 
 "; 
 ?>
