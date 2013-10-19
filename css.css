@@ -1,0 +1,21 @@
+form{
+	font-family:arial, helvetica, sans-serif;
+	background:silver;
+	padding:15px;
+	border-radius:10px;
+	Width: 400px;
+	left: 50%;
+	margin: 0 auto;
+}
+
+#boton-enviar{
+	width: 172px;
+	height: 33px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+h1{
+	text-align:center;
+	font-family:arial, helvetica, sans-serif;
+}
