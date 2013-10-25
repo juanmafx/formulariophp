@@ -11,7 +11,7 @@
 
 <br>NOMBRE: <input type='text' name='Nombre' id='Nombre'> 
 
-<br>E-MAIL:<input type='text' name='email' id='email'pattern="^[a-zA-Z0-9.!#$%'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" 
+<br>E-MAIL:<input type='text' name='email' id='email' pattern="^[a-zA-Z0-9.!#$%'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" 
  required	value="ejemplo@hotmail.com" 
 onclick="if(this.value=='ejemplo@hotmail.com') this.value=''" onblur="if(this.value=='') this.value='ejemplo@hotmail.com'">
 
