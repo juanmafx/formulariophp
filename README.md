@@ -28,7 +28,7 @@ Para que el administrador del sitio reciba esa información en alguna casilla de
 
 SUPER IMPORTANTE:
 
-En el archivo confirmacion.php en el renglón 55 del código casi al final encontrarás esto:
+En el archivo confirmacion.php en la linea  49 del código casi al final encontrarás esto:
 
 //cambiar aqui el email 
 
