@@ -1,4 +1,4 @@
-<form class="row needs-validation" novalidate>
+<form class="row needs-validation" action="POST"  novalidate>
 
     <div class="col-md-6">
         <label class="form-label">Nombre:</label>
@@ -41,6 +41,6 @@
 
 
     <div class="col-12">
-        <button class="btn btn-primary" type="submit" onclick="sendForm(event);">Submit form</button>
+        <button class="btn btn-primary" type="submit" onclick="sendForm()">Submit form</button>
     </div>
 </form>

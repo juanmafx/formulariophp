@@ -8,29 +8,31 @@
   Array.prototype.slice.call(forms)
     .forEach(function (form) {
       form.addEventListener('submit', function (event) {
-
-        let nombre = document.getElementById('input_nombre');
-        let email = document.getElementById('input_email').value;
-        let telefono = document.getElementById('input_telefono').value;
-        let asunto = document.getElementById('input_asunto').value;
-        let mensaje = document.getElementById('input_mensaje').value;
-        console.log("nombre".nombre.value);
-        console.log("email".email);
-        console.log("asunto".asunto);
-        console.log("mensaje ".mensaje);
         if (!form.checkValidity()) {
           event.preventDefault()
           event.stopPropagation()
         }
+
+        let nombre = document.getElementById("input_nombre").value;
+        let email = document.getElementById("input_email").value;
+        let telefono = document.getElementById("input_telefono").value;
+        let asunto = document.getElementById("input_asunto").value;
+        let mensaje = document.getElementById("input_mensaje").value;
+
+        let vec = [nombre, email, telefono, asunto, mensaje];
+        console.log("Vector: " + vec);
+
+
 
         form.classList.add('was-validated')
       }, false)
     })
 })();
 
-function sendForm(event) {
-
-
+function sendForm() {
+  console.log("form sendd");
+  let nombre = document.getElementById("input_nombre").value;
+  console.log(nombre);
 
 
 
