@@ -3,72 +3,73 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Formulario de contacto</title>
+    <title>Confirmacion de envio formulario</title>
     <link rel="stylesheet" href="libs/bootstrap.css">
 </head>
 
 <body>
     <div class="container">
-        <div class="py-5 text-center">
-            <h2>Formulario de Contacto</h2>
+        <?php
+
+        function form_mail($sPara, $sAsunto, $sTexto, $sDe)
+        {
+            $bHayFicheros = 0;
+            $sCabeceraTexto = "";
+            $sAdjuntos = "";
+
+            if ($sDe) $sCabeceras = "From:" . $sDe . "\n";
+            else $sCabeceras = "";
+            $sCabeceras .= "MIME-version: 1.0\n";
+            foreach ($_POST as $sNombre => $sValor)
+                $sTexto = $sTexto . "\n" . $sNombre . " = " . $sValor;
+
+            foreach ($_FILES as $vAdjunto) {
+                if ($bHayFicheros == 0) {
+                    $bHayFicheros = 1;
+                    $sCabeceras .= "Content-type: multipart/mixed;";
+                    $sCabeceras .= "boundary=\"--_Separador-de-mensajes_--\"\n";
+
+                    $sCabeceraTexto = "----_Separador-de-mensajes_--\n";
+                    $sCabeceraTexto .= "Content-type: text/plain;charset=iso-8859-1\n";
+                    $sCabeceraTexto .= "Content-transfer-encoding: 7BIT\n";
+
+                    $sTexto = $sCabeceraTexto . $sTexto;
+                }
+                if ($vAdjunto["size"] > 0) {
+                    $sAdjuntos .= "\n\n----_Separador-de-mensajes_--\n";
+                    $sAdjuntos .= "Content-type: " . $vAdjunto["type"] . ";name=\"" . $vAdjunto["name"] . "\"\n";;
+                    $sAdjuntos .= "Content-Transfer-Encoding: BASE64\n";
+                    $sAdjuntos .= "Content-disposition: attachment;filename=\"" . $vAdjunto["name"] . "\"\n\n";
+
+                    $oFichero = fopen($vAdjunto["tmp_name"], 'r');
+                    $sContenido = fread($oFichero, filesize($vAdjunto["tmp_name"]));
+                    $sAdjuntos .= chunk_split(base64_encode($sContenido));
+                    fclose($oFichero);
+                }
+            }
+
+            if ($bHayFicheros)
+                $sTexto .= $sAdjuntos . "\n\n----_Separador-de-mensajes_----\n";
+            return (mail($sPara, $sAsunto, $sTexto, $sCabeceras));
+        }
+
+        //Cambiar aqui el email.
+        if (form_mail("info@sucorreo", $_POST['asunto'], "Los datos introducidos en el formulario son:\n\n", $_POST['email']))
+            echo "
+        <div class='py-5 text-center'>
+            <div class='card'>
+                <h2>Confirmacion envio correo.</h2>
+
+                <div class='alert alert-success'>
+                    <strong>Confirmacion Envío</strong> Su mensaje fue enviado.
+                </div>
+            </div>
         </div>
 
-        <form class="row needs-validation" name='formulario' id='formulario' method='post' action='confirmacion.php' target='_self' enctype="multipart/form-data" novalidate>
-            <div class="col-md-6">
-                <label class="form-label">Nombre:</label>
-                <input type="text" class="form-control" id="nombre" name="nombre" required>
-                <div class="invalid-feedback">
-                    Ingrese nombre.
-                </div>
-            </div>
+";
+        ?>
 
-            <div class="col-md-6">
-                <label class="form-label">Email:</label>
-                <input type="email" class="form-control" id="email" name="email" required>
-                <div class="invalid-feedback">
-                    Ingrese email.
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <label class="form-label">Teléfono:</label>
-                <input type="text" class="form-control" id="telefono" name="telefono" required>
-                <div class="invalid-feedback">
-                    Ingrese teléfono.
-                </div>
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">Asunto:</label>
-                <input type="text" class="form-control" id="asunto" name="asunto" required>
-                <div class="invalid-feedback">
-                    Ingrese asunto.
-                </div>
-            </div>
-
-            <div class="col-md-12">
-                <label class="form-label">Si desea puede adjuntar un archivo:</label>
-                <br>
-                <input type='file' name='archivo' id='archivo'>
-                <br>
-                <div class="invalid-feedback">
-                    Ingrese menasaje.
-                </div>
-            </div>
-            <div class="col-md-12">
-                <label class="form-label">Mensaje:</label>
-                <textarea class="form-control" id="mensaje" name="mensaje" required></textarea>
-                <div class="invalid-feedback">
-                    Ingrese menasaje.
-                </div>
-            </div>
-
-
-            <div class="col-12 m-1">
-                <button class="btn btn-primary" id="boton-enviar" type="submit" value="Enviar" name="input_submit" onclick="sendForm()">Enviar</button>
-
-            </div>
-        </form>
-        <button class="btn btn-primary float-right" onclick="autoCompletar()">AutoCompletar</button>
+    </div>
 
 </body>
 <script src="libs/formJs.js" ?id=<? print(date('H:i:s')); ?>></script>
