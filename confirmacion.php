@@ -1,77 +1,67 @@
+<?php
+session_start();
+var_dump($_SESSION['vectorData']);
+
+?>
+
 <!doctype html>
 <html lang="es">
-
 <head>
-    <meta charset="utf-8">
-    <title>Confirmacion de envio formulario</title>
-    <link rel="stylesheet" href="css.css">
+<meta charset="utf-8">
+<title>Confirmacion de envio formulario</title>
+<link rel="stylesheet" href="css.css">
 </head>
-
 <body>
+<?php 
+function form_mail($sPara, $sAsunto, $sTexto, $sDe)
+{ 
+$bHayFicheros = 0; 
+$sCabeceraTexto = ""; 
+$sAdjuntos = "";
 
-    <?php
-    if (isset($_POST['asunto'])) {
-        $asunto = htmlentities($_POST['asunto']);
-    } else {
-        $asunto = null;
-    }
-    if (isset($_POST['email'])) {
-        $email = htmlentities($_POST['email']);
-    } else {
-        $email = null;
-    }
+if ($sDe)$sCabeceras = "From:".$sDe."\n"; 
+else $sCabeceras = ""; 
+$sCabeceras .= "MIME-version: 1.0\n"; 
+foreach ($_POST as $sNombre => $sValor) 
+$sTexto = $sTexto."\n".$sNombre." = ".$sValor;
 
+foreach ($_FILES as $vAdjunto)
+{ 
+if ($bHayFicheros == 0)
+{ 
+$bHayFicheros = 1; 
+$sCabeceras .= "Content-type: multipart/mixed;"; 
+$sCabeceras .= "boundary=\"--_Separador-de-mensajes_--\"\n";
 
-    function form_mail($sPara, $sAsunto, $sTexto, $sDe)
-    {
-        $bHayFicheros = 0;
-        $sCabeceraTexto = "";
-        $sAdjuntos = "";
+$sCabeceraTexto = "----_Separador-de-mensajes_--\n"; 
+$sCabeceraTexto .= "Content-type: text/plain;charset=iso-8859-1\n"; 
+$sCabeceraTexto .= "Content-transfer-encoding: 7BIT\n";
 
-        if ($sDe) $sCabeceras = "From:" . $sDe . "\n";
-        else $sCabeceras = "";
-        $sCabeceras .= "MIME-version: 1.0\n";
-        foreach ($_POST as $sNombre => $sValor)
-            $sTexto = $sTexto . "\n" . $sNombre . " = " . $sValor;
+$sTexto = $sCabeceraTexto.$sTexto; 
+} 
+if ($vAdjunto["size"] > 0)
+{ 
+$sAdjuntos .= "\n\n----_Separador-de-mensajes_--\n"; 
+$sAdjuntos .= "Content-type: ".$vAdjunto["type"].";name=\"".$vAdjunto["name"]."\"\n";; 
+$sAdjuntos .= "Content-Transfer-Encoding: BASE64\n"; 
+$sAdjuntos .= "Content-disposition: attachment;filename=\"".$vAdjunto["name"]."\"\n\n";
 
-        foreach ($_FILES as $vAdjunto) {
-            if ($bHayFicheros == 0) {
-                $bHayFicheros = 1;
-                $sCabeceras .= "Content-type: multipart/mixed;";
-                $sCabeceras .= "boundary=\"--_Separador-de-mensajes_--\"\n";
+$oFichero = fopen($vAdjunto["tmp_name"], 'r'); 
+$sContenido = fread($oFichero, filesize($vAdjunto["tmp_name"])); 
+$sAdjuntos .= chunk_split(base64_encode($sContenido)); 
+fclose($oFichero); 
+} 
+}
 
-                $sCabeceraTexto = "----_Separador-de-mensajes_--\n";
-                $sCabeceraTexto .= "Content-type: text/plain;charset=iso-8859-1\n";
-                $sCabeceraTexto .= "Content-transfer-encoding: 7BIT\n";
+if ($bHayFicheros) 
+$sTexto .= $sAdjuntos."\n\n----_Separador-de-mensajes_----\n"; 
+return(mail($sPara, $sAsunto, $sTexto, $sCabeceras)); 
+}
 
-                $sTexto = $sCabeceraTexto . $sTexto;
-            }
-            if ($vAdjunto["size"] > 0) {
-                $sAdjuntos .= "\n\n----_Separador-de-mensajes_--\n";
-                $sAdjuntos .= "Content-type: " . $vAdjunto["type"] . ";name=\"" . $vAdjunto["name"] . "\"\n";;
-                $sAdjuntos .= "Content-Transfer-Encoding: BASE64\n";
-                $sAdjuntos .= "Content-disposition: attachment;filename=\"" . $vAdjunto["name"] . "\"\n\n";
-
-                $oFichero = fopen($vAdjunto["tmp_name"], 'r');
-                $sContenido = fread($oFichero, filesize($vAdjunto["tmp_name"]));
-                $sAdjuntos .= chunk_split(base64_encode($sContenido));
-                fclose($oFichero);
-            }
-        }
-
-        if ($bHayFicheros)
-            $sTexto .= $sAdjuntos . "\n\n----_Separador-de-mensajes_----\n";
-        return (mail($sPara, $sAsunto, $sTexto, $sCabeceras));
-    }
-
-    //cambiar aqui el email 
-    if (form_mail(
-        "jramallo1989@gmail.com",
-        $asunto,
-        "Los datos introducidos en el formulario son:\n\n",
-        $email
-    ))
-        echo "
+//cambiar aqui el email 
+if (form_mail("TUEMAIL@LOQUESEA", $_POST[asunto], 
+"Los datos introducidos en el formulario son:\n\n", $_POST[email])) 
+echo "
  <h1>Su formulario fue enviado con exito </h1>
 <form>   
 <p>Muchas gracias <br>
@@ -82,9 +72,8 @@ Saludos el equipo de ..lo que seas..
 </p>
 </form>
 
-";
-    ?>
-    </div>
+"; 
+?>
+</div>
 </body>
-
 </html>

@@ -8,31 +8,34 @@
   Array.prototype.slice.call(forms)
     .forEach(function (form) {
       form.addEventListener('submit', function (event) {
-
-        let nombre = document.getElementById('input_nombre');
-        let email = document.getElementById('input_email').value;
-        let telefono = document.getElementById('input_telefono').value;
-        let asunto = document.getElementById('input_asunto').value;
-        let mensaje = document.getElementById('input_mensaje').value;
-        console.log("nombre".nombre.value);
-        console.log("email".email);
-        console.log("asunto".asunto);
-        console.log("mensaje ".mensaje);
         if (!form.checkValidity()) {
           event.preventDefault()
           event.stopPropagation()
         }
+
+        let nombre = document.getElementById("input_nombre").value;
+        let email = document.getElementById("input_email").value;
+        let telefono = document.getElementById("input_telefono").value;
+        let asunto = document.getElementById("input_asunto").value;
+        let mensaje = document.getElementById("input_mensaje").value;
+
+        let vector = [nombre, email, telefono, asunto, mensaje];
+        console.log("Vector: " + vector);
 
         form.classList.add('was-validated')
       }, false)
     })
 })();
 
-function sendForm(event) {
-
-
-
-
-
+function sendForm() {
+  console.log("Se disponibiliza la informacion del formulario");
 }
 
+// For testing propurse
+function autoCompletar() {
+  document.getElementById("input_nombre").value ="input_nombre"
+  document.getElementById("input_email").value ="input_email@mail.com"
+  document.getElementById("input_telefono").value ="input_telefono"
+  document.getElementById("input_asunto").value ="input_asunto"
+  document.getElementById("input_mensaje").value ="input_mensaje"
+}
