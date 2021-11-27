@@ -58,8 +58,14 @@ if (isset($_POST['input_submited'])) {
         </div>
     </div>
 
+<<<<<<< HEAD
     <div class="col-12 m-1">
         <button class="btn btn-primary" type="submit" id="input_submited" name="input_submited">Enviar Mensaje</button>
+=======
+
+    <div class="col-12">
+        <button class="btn btn-primary" type="submit" onclick="sendForm()">Submit form</button>
+>>>>>>> 8bd879773889b410b5e6b4ab0dcae91fe5a8dca0
     </div>
 
 </form>

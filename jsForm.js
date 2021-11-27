@@ -19,8 +19,15 @@
         let asunto = document.getElementById("input_asunto").value;
         let mensaje = document.getElementById("input_mensaje").value;
 
+<<<<<<< HEAD
         let vector = [nombre, email, telefono, asunto, mensaje];
         console.log("Vector: " + vector);
+=======
+        let vec = [nombre, email, telefono, asunto, mensaje];
+        console.log("Vector: " + vec);
+
+
+>>>>>>> 8bd879773889b410b5e6b4ab0dcae91fe5a8dca0
 
         form.classList.add('was-validated')
       }, false)
@@ -28,7 +35,16 @@
 })();
 
 function sendForm() {
+<<<<<<< HEAD
   console.log("Se disponibiliza la informacion del formulario");
+=======
+  console.log("form sendd");
+  let nombre = document.getElementById("input_nombre").value;
+  console.log(nombre);
+
+
+
+>>>>>>> 8bd879773889b410b5e6b4ab0dcae91fe5a8dca0
 }
 
 // For testing propurse
