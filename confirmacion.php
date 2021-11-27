@@ -59,8 +59,8 @@ return(mail($sPara, $sAsunto, $sTexto, $sCabeceras));
 }
 
 //cambiar aqui el email 
-if (form_mail("TUEMAIL@LOQUESEA", $_POST[asunto], 
-"Los datos introducidos en el formulario son:\n\n", $_POST[email])) 
+if (form_mail("TUEMAIL@LOQUESEA", $_POST['asunto'], 
+"Los datos introducidos en el formulario son:\n\n", $_POST['email'])) 
 echo "
  <h1>Su formulario fue enviado con exito </h1>
 <form>   
