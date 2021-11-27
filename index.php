@@ -2,31 +2,79 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>Formulario de contacto</title>
-<link rel="stylesheet" href="css.css">
+<title>Confirmacion de envio formulario</title>
+<link rel="stylesheet" href="libs/bootstrap.css">
 </head>
 <body>
-<h1>Formulario de contacto</h1>
-<form name='formulario' id='formulario' method='post' action='confirmacion.php' target='_self' enctype="multipart/form-data"> 
+    <div class="container">
+        <div class="py-5 text-center">
+            <h2>Confiracion Email</h2>
+        </div>
+		<?php
 
-<br>NOMBRE: <input type='text' name='Nombre' id='Nombre'> 
+function form_mail($sPara, $sAsunto, $sTexto, $sDe)
+{ 
+$bHayFicheros = 0; 
+$sCabeceraTexto = ""; 
+$sAdjuntos = "";
 
-<br>E-MAIL:<input type='text' name='email' id='email' pattern="^[a-zA-Z0-9.!#$%'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" 
- required	value="ejemplo@hotmail.com" 
-onclick="if(this.value=='ejemplo@hotmail.com') this.value=''" onblur="if(this.value=='') this.value='ejemplo@hotmail.com'">
+if ($sDe)$sCabeceras = "From:".$sDe."\n"; 
+else $sCabeceras = ""; 
+$sCabeceras .= "MIME-version: 1.0\n"; 
+foreach ($_POST as $sNombre => $sValor) 
+$sTexto = $sTexto."\n".$sNombre." = ".$sValor;
 
-<br>TELEFONO:<input type='text' name='telefono' id='telefono' value="Con Codigo de Area" 
-onclick="if(this.value=='Con Codigo de Area') this.value=''" onblur="if(this.value=='') this.value='Con Codigo de Area'">
-<br>ASUNTO: <input type='text' name='asunto' id='asunto'>
+foreach ($_FILES as $vAdjunto)
+{ 
+if ($bHayFicheros == 0)
+{ 
+$bHayFicheros = 1; 
+$sCabeceras .= "Content-type: multipart/mixed;"; 
+$sCabeceras .= "boundary=\"--_Separador-de-mensajes_--\"\n";
+
+$sCabeceraTexto = "----_Separador-de-mensajes_--\n"; 
+$sCabeceraTexto .= "Content-type: text/plain;charset=iso-8859-1\n"; 
+$sCabeceraTexto .= "Content-transfer-encoding: 7BIT\n";
+
+$sTexto = $sCabeceraTexto.$sTexto; 
+} 
+if ($vAdjunto["size"] > 0)
+{ 
+$sAdjuntos .= "\n\n----_Separador-de-mensajes_--\n"; 
+$sAdjuntos .= "Content-type: ".$vAdjunto["type"].";name=\"".$vAdjunto["name"]."\"\n";; 
+$sAdjuntos .= "Content-Transfer-Encoding: BASE64\n"; 
+$sAdjuntos .= "Content-disposition: attachment;filename=\"".$vAdjunto["name"]."\"\n\n";
+
+$oFichero = fopen($vAdjunto["tmp_name"], 'r'); 
+$sContenido = fread($oFichero, filesize($vAdjunto["tmp_name"])); 
+$sAdjuntos .= chunk_split(base64_encode($sContenido)); 
+fclose($oFichero); 
+} 
+}
+
+if ($bHayFicheros) 
+$sTexto .= $sAdjuntos."\n\n----_Separador-de-mensajes_----\n"; 
+return(mail($sPara, $sAsunto, $sTexto, $sCabeceras)); 
+}
+
+//cambiar aqui el email 
+if (form_mail("info@tusitio.com.ar", $_POST['asunto'],"Los datos introducidos en el formulario son:\n\n", $_POST['email'])) 
+echo "
+ <h1>Su formulario fue enviado con exito </h1>
+<form>   
+<p>Muchas gracias <br>
+O lo que tu quieras poner los que sea!<br><br>
 <br>
-MENSAJE:<br>
-<textarea name="mensaje" cols="35" rows="10" id="mensaje"></textarea>
-<br>
-Si desea puede adjuntar un archivo:<input  type='file' name='archivo1' id='archivo1' >
- <br>
-
-<input  id=boton-enviar type='submit' value='Enviar'> 
-
+Saludos 
+</p>
 </form>
+
+"; 
+?>
+		
+</div>
+
 </body>
+<script src="libs/formJs.js" ?id=<? print(date('H:i:s')); ?>></script>
+
 </html>
