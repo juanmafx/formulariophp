@@ -1,0 +1,11 @@
+HTTrack3.49-2+htsswf+htsjava launched on Tue, 18 Jul 2023 23:22:36 at http://bootstrapdocs.com/v3.0.3/docs/ +*.png +*.gif +*.jpg +*.jpeg +*.css +*.js -ad.doubleclick.net/* -mime:application/foobar
+(winhttrack -qwC2%Ps2u1%s%uN0%I0p3DaK0H0%kf2A25000%f#f -F "Mozilla/4.5 (compatible; HTTrack 3.0x; Windows 98)" -%F "<!-- Mirrored from %s%s by HTTrack Website Copier/3.x [XR&CO'2014], %s -->" -%l "en, *" http://bootstrapdocs.com/v3.0.3/docs/ -O1 "C:\My Web Sites\http___bootstrapdocs.com_v3.0.3_docs_components_" +*.png +*.gif +*.jpg +*.jpeg +*.css +*.js -ad.doubleclick.net/* -mime:application/foobar )
+
+Information, Warnings and Errors reported for this mirror:
+note:	the hts-log.txt file, and hts-cache folder, may contain sensitive information,
+	such as username/password authentication for websites mirrored in this project
+	do not share these files/folders if you want these information to remain private
+
+
+HTTrack Website Copier/3.49-2 mirror complete in 1 minutes 14 seconds : 82 links scanned, 81 files written (3199207 bytes overall) [1747623 bytes received at 23616 bytes/sec], 2142181 bytes transferred using HTTP compression in 62 files, ratio 27%, 8.1 requests per connection
+(No errors, 0 warnings, 0 messages)
