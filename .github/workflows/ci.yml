@@ -25,7 +25,7 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: fileinfo, mbstring, pdo_sqlite, sodium
           coverage: none
-          tools: composer:2.9.5
+          tools: composer:2.11.2
       - run: composer validate --strict --no-check-publish
       - run: composer install --no-scripts --no-interaction --no-progress --prefer-dist
       - run: composer audit --locked

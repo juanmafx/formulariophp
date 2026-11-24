@@ -18,7 +18,7 @@
             <dt>Phone</dt><dd><?= $e($submission->contact->phone) ?></dd>
             <dt>Delivery</dt><dd><?= $e($submission->deliveryStatus) ?></dd>
             <?php if ($submission->attachmentName !== null): ?>
-                <dt>Attachment</dt><dd><?= $e($submission->attachmentName) ?> (delivered by email only)</dd>
+                <dt>Attachment</dt><dd><?= $e($submission->attachmentName) ?> (file not stored; sent by email only)</dd>
             <?php endif; ?>
         </dl>
         <p class="message"><?= $e($submission->contact->message) ?></p>

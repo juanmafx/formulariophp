@@ -14,10 +14,10 @@ Small sites often need a contact form and nothing else. Hosted form services han
 - Validates all input on the server and rejects control characters that could inject mail headers.
 - Encrypts each personal field with XChaCha20-Poly1305 before writing it to SQLite.
 - Sends a notification through [Symfony Mailer](https://symfony.com/doc/current/mailer.html) using a fixed sender, with the visitor only in `Reply-To`.
-- Records whether each notification was delivered, so a mail outage does not lose the message.
+- Records whether the mail transport accepted each notification, so a mail outage does not lose the message text.
 - Provides an admin area with Argon2id passwords, TOTP, replay protection, rate limiting, and session timeouts.
 
-Attachments are emailed and never written to the database. Only their sanitized file name is stored, encrypted.
+Attachments are emailed and never written to the database. Only their sanitized file name is stored, encrypted, so an attachment is lost if its notification email fails.
 
 ## Architecture
 
@@ -42,7 +42,7 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for details.
 
 ## Quick start
 
-Requirements: PHP 8.4 or newer with `pdo_sqlite`, `sodium`, `mbstring`, and `fileinfo`, plus Composer.
+Requirements: PHP 8.4 or newer built with Argon2 support and the `pdo_sqlite`, `sodium`, `mbstring`, and `fileinfo` extensions, plus Composer.
 
 ```bash
 composer install --no-dev --no-scripts
@@ -76,16 +76,18 @@ If an authenticator device is lost, replace the credentials from the server:
 php backend/bin/create-admin.php your-admin-name --reset
 ```
 
+A reset ends that account's pending and active sessions.
+
 ## Configuration
 
 | Variable | Required | Description |
 | --- | --- | --- |
 | `APP_MASTER_KEY` | Yes | Base64 encoding of 32 random bytes. Subkeys are derived from it. |
 | `DATABASE_PATH` | Yes | Absolute path to the SQLite file, outside the web root. |
-| `MAILER_DSN` | Yes | Symfony Mailer DSN, for example `smtp://user:pass@host:587`. |
+| `MAILER_DSN` | Yes | Symfony Mailer DSN, for example `smtp://user:pass@host:587`. The `null://null` value in `.env.example` discards mail and still records it as `sent`, so replace it before real use. |
 | `MAIL_FROM` | Yes | Fixed sender address on a domain you control. |
 | `MAIL_TO` | Yes | Inbox that receives notifications. |
-| `SESSION_COOKIE_SECURE` | No | Defaults to `true`. Disable only for local HTTP. |
+| `SESSION_COOKIE_SECURE` | No | Defaults to `true`. Disable only for local HTTP. A value that is not a boolean stops the application instead of weakening the cookie. |
 
 Back up `APP_MASTER_KEY` separately from the database. **If the key is lost, stored submissions cannot be recovered.**
 
@@ -108,7 +110,7 @@ The suite has unit, integration, and functional layers. Integration and function
 - Argon2id password hashing with per-password salts.
 - Authenticated field encryption bound to the record and column, so ciphertext cannot be moved between rows.
 - CSRF tokens on every state-changing request.
-- Rate limits on the form, sign-in, and TOTP verification, keyed by HMAC so raw IP addresses are not stored.
+- Rate limits on the form, sign-in, and TOTP verification, keyed by HMAC so raw IP addresses are not stored. IPv6 clients are grouped by /64 network.
 - Strict Content Security Policy with no script execution allowed.
 
 Known limitations:
@@ -126,6 +128,12 @@ The current version is in [VERSION](VERSION). Changes are recorded in [CHANGELOG
 ## License
 
 This repository does not currently include a license file, so no reuse rights are granted by default. Third-party dependencies are installed through Composer and remain under their own licenses.
+
+## Third-party software
+
+The runtime Composer dependencies, including Symfony Mailer, Symfony Dotenv, and `spomky-labs/otphp`, are MIT licensed. Run `composer licenses --no-dev` for the full list.
+
+Versions before 1.0.0 bundled third-party material that is not part of this rewrite: Bootstrap, jQuery, a form validation snippet from the Bootstrap documentation, and an HTTrack mirror of the Bootstrap 3.0.3 documentation. Those files were not written by the author of this project, remain in Git history, and stay under their original licenses.
 
 ## Author
 

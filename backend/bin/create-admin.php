@@ -45,8 +45,8 @@ if ($isTerminal) {
     shell_exec('stty echo');
     fwrite(STDERR, PHP_EOL);
 }
-if (mb_strlen($password) < 14) {
-    fwrite(STDERR, "The password must have at least 14 characters.\n");
+if (mb_strlen($password) < 14 || strlen($password) > AdminAuthenticator::MAX_PASSWORD_BYTES) {
+    fwrite(STDERR, "The password must have at least 14 characters and at most 1024 bytes.\n");
     exit(1);
 }
 

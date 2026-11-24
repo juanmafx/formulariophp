@@ -37,4 +37,25 @@ final class PasswordHasherTest extends TestCase
         self::assertTrue((new PasswordHasher(2048, 2, 1))->needsRehash($weak));
         self::assertFalse((new PasswordHasher(1024, 1, 1))->needsRehash($weak));
     }
+
+    public function testUnknownUserWorkCostsTheSameAsOneVerification(): void
+    {
+        $hasher = new PasswordHasher(16384, 2, 1);
+        $hash = $hasher->hash('correct horse battery');
+        $verifications = [];
+        $decoys = [];
+        for ($sample = 0; $sample < 11; $sample++) {
+            $start = hrtime(true);
+            $hasher->verify('wrong password', $hash);
+            $verifications[] = hrtime(true) - $start;
+
+            $start = hrtime(true);
+            (new PasswordHasher(16384, 2, 1))->burnVerification('wrong password');
+            $decoys[] = hrtime(true) - $start;
+        }
+        sort($verifications);
+        sort($decoys);
+
+        self::assertLessThan(1.5, $decoys[5] / $verifications[5]);
+    }
 }

@@ -11,6 +11,12 @@ final class DatabaseFactory
 {
     public static function connect(string $path): PDO
     {
+        if ($path !== ':memory:' && !file_exists($path)) {
+            $previousMask = umask(0077);
+            touch($path);
+            umask($previousMask);
+        }
+
         $pdo = new PDO('sqlite:' . $path, null, null, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,

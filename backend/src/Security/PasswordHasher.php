@@ -6,8 +6,6 @@ namespace ContactForm\Security;
 
 final class PasswordHasher
 {
-    private ?string $decoyHash = null;
-
     public function __construct(
         private readonly int $memoryCostKib = 65536,
         private readonly int $timeCost = 3,
@@ -32,8 +30,7 @@ final class PasswordHasher
 
     public function burnVerification(#[\SensitiveParameter] string $password): void
     {
-        $this->decoyHash ??= $this->hash(random_bytes(16));
-        password_verify($password, $this->decoyHash);
+        $this->hash($password);
     }
 
     private function options(): array

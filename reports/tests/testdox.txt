@@ -8,6 +8,9 @@ App Config (ContactForm\Tests\Unit\AppConfig)
  [x] Rejects invalid configuration with data set "missing dsn"
  [x] Rejects invalid configuration with data set "invalid sender"
  [x] Rejects invalid configuration with data set "invalid recipient"
+ [x] Rejects invalid configuration with data set "misspelled cookie flag"
+ [x] Rejects invalid configuration with data set "unknown cookie flag"
+ [x] Rejects invalid configuration with data set "empty cookie flag"
 
 Application Flow (ContactForm\Tests\Functional\ApplicationFlow)
  [x] Contact page is english and carries csrf and security headers
@@ -28,6 +31,11 @@ Application Flow (ContactForm\Tests\Functional\ApplicationFlow)
  [x] Idle session expires
  [x] Logout ends the session
  [x] Unknown route returns 404
+ [x] Credential reset ends existing sessions
+ [x] Credential reset cancels pending sign in
+ [x] New password step drops previous authentication
+ [x] Ipv 6 clients in one network share the contact limit
+ [x] Blocked client cannot grow the rate limit table
 
 Attachment Validator (ContactForm\Tests\Unit\AttachmentValidator)
  [x] Accepts allowed type and derives extension from content
@@ -75,6 +83,7 @@ Password Hasher (ContactForm\Tests\Unit\PasswordHasher)
  [x] Produces salted argon 2id hashes
  [x] Default parameters meet the documented cost
  [x] Detects hashes that need rehashing
+ [x] Unknown user work costs the same as one verification
 
 Persistence (ContactForm\Tests\Integration\Persistence)
  [x] Schema is idempotent
@@ -84,11 +93,20 @@ Persistence (ContactForm\Tests\Integration\Persistence)
  [x] Schema rejects plaintext submission fields
  [x] Admin lookup is case insensitive and totp step only advances
  [x] Rate limit store counts resets and prunes
+ [x] New database file is private regardless of umask
 
 Rate Limiter (ContactForm\Tests\Unit\RateLimiter)
  [x] Blocks after the limit and recovers after the window
  [x] Isolates buckets and identifiers
  [x] Stores only keyed hashes of identifiers
+
+Request (ContactForm\Tests\Unit\Request)
+ [x] Normalizes client network for rate limiting with data set "ipv4 stays exact"
+ [x] Normalizes client network for rate limiting with data set "ipv6 groups by /64"
+ [x] Normalizes client network for rate limiting with data set "ipv6 sibling host"
+ [x] Normalizes client network for rate limiting with data set "ipv6 uppercase"
+ [x] Normalizes client network for rate limiting with data set "ipv4-mapped ipv6"
+ [x] Normalizes client network for rate limiting with data set "unparseable value"
 
 Security Headers (ContactForm\Tests\Unit\SecurityHeaders)
  [x] Applies restrictive policy
