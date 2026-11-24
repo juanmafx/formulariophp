@@ -1,0 +1,61 @@
+:root {
+    color-scheme: light dark;
+    --surface: light-dark(#ffffff, #1c2128);
+    --background: light-dark(#f4f6f8, #101418);
+    --text: light-dark(#1b1f24, #e6edf3);
+    --muted: light-dark(#57606a, #9da7b3);
+    --border: light-dark(#d0d7de, #30363d);
+    --accent: light-dark(#0b5cad, #4c9be8);
+    --danger: light-dark(#b42318, #ff7b72);
+    --success: light-dark(#1a7f37, #3fb950);
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--background);
+    color: var(--text);
+    font: 16px/1.5 system-ui, sans-serif;
+}
+
+.container { max-width: 56rem; margin: 0 auto; padding: 2rem 1rem; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: .5rem; padding: 1.5rem; margin-bottom: 1rem; }
+.narrow { max-width: 24rem; margin-inline: auto; }
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1rem; }
+.field { display: flex; flex-direction: column; gap: .25rem; margin-bottom: .5rem; }
+.field-wide { grid-column: 1 / -1; }
+.toolbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+label { font-weight: 600; }
+
+input, textarea {
+    width: 100%;
+    padding: .55rem .7rem;
+    border: 1px solid var(--border);
+    border-radius: .35rem;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+}
+
+input:user-invalid, textarea:user-invalid { border-color: var(--danger); }
+input:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+button {
+    padding: .55rem 1.2rem;
+    border: 0;
+    border-radius: .35rem;
+    background: var(--accent);
+    color: light-dark(#ffffff, #0d1117);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+a { color: var(--accent); }
+.error { color: var(--danger); margin: 0; }
+.success { color: var(--success); }
+.message { white-space: pre-wrap; overflow-wrap: anywhere; }
+dl { display: grid; grid-template-columns: max-content 1fr; gap: .15rem 1rem; }
+dt { color: var(--muted); }
+dd { margin: 0; overflow-wrap: anywhere; }
