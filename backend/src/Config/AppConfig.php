@@ -31,8 +31,25 @@ final readonly class AppConfig
             self::required($environment, 'MAILER_DSN'),
             self::email($environment, 'MAIL_FROM'),
             self::email($environment, 'MAIL_TO'),
-            filter_var($environment['SESSION_COOKIE_SECURE'] ?? 'true', FILTER_VALIDATE_BOOLEAN),
+            self::boolean($environment, 'SESSION_COOKIE_SECURE', true),
         );
+    }
+
+    private static function boolean(array $environment, string $name, bool $default): bool
+    {
+        $raw = $environment[$name] ?? null;
+        if ($raw === null) {
+            return $default;
+        }
+
+        $value = is_string($raw) && trim($raw) !== ''
+            ? filter_var($raw, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)
+            : null;
+        if ($value === null) {
+            throw new InvalidArgumentException($name . ' must be true or false.');
+        }
+
+        return $value;
     }
 
     private static function required(array $environment, string $name): string

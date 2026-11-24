@@ -76,7 +76,7 @@ final readonly class Application
 
     private function submitContact(Request $request): Response
     {
-        if (!$this->rateLimiter->allow('contact', $request->clientIp, 10, 3600)) {
+        if (!$this->rateLimiter->allow('contact', $request->clientNetwork(), 10, 3600)) {
             return $this->error(429, 'Too many messages. Try again later.');
         }
 
@@ -132,9 +132,10 @@ final readonly class Application
     private function login(Request $request): Response
     {
         $username = mb_strtolower(trim($request->input('username')));
-        $withinIpLimit = $this->rateLimiter->allow('login-ip', $request->clientIp, 10, 900);
-        $withinAccountLimit = $this->rateLimiter->allow('login-account', $username, 10, 900);
-        if (!$withinIpLimit || !$withinAccountLimit) {
+        if (
+            !$this->rateLimiter->allow('login-ip', $request->clientNetwork(), 10, 900)
+            || !$this->rateLimiter->allow('login-account', $username, 10, 900)
+        ) {
             return $this->error(429, 'Too many sign-in attempts. Try again later.');
         }
 

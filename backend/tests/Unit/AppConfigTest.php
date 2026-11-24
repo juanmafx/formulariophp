@@ -55,6 +55,9 @@ final class AppConfigTest extends TestCase
             'missing dsn' => ['MAILER_DSN', ''],
             'invalid sender' => ['MAIL_FROM', 'invalid'],
             'invalid recipient' => ['MAIL_TO', 'invalid'],
+            'misspelled cookie flag' => ['SESSION_COOKIE_SECURE', 'ture'],
+            'unknown cookie flag' => ['SESSION_COOKIE_SECURE', 'enabled'],
+            'empty cookie flag' => ['SESSION_COOKIE_SECURE', ''],
         ];
     }
 }

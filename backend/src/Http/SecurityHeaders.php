@@ -22,7 +22,7 @@ final class SecurityHeaders
             'Cache-Control' => 'no-store',
         ];
         if ($secure) {
-            $headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains';
+            $headers['Strict-Transport-Security'] = 'max-age=31536000';
         }
 
         return $response->withHeaders($headers);

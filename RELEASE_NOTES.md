@@ -15,7 +15,7 @@ Version 1.0.0 is a full rewrite of the 2013 contact form. It keeps the same purp
 
 This release is not a drop-in replacement:
 
-1. Install PHP 8.4 or newer with `pdo_sqlite` and `sodium`.
+1. Install PHP 8.4 or newer with Argon2 support, `pdo_sqlite`, and `sodium`.
 2. Point the document root at `frontend/public`.
 3. Create `.env` from `.env.example` and generate `APP_MASTER_KEY`.
 4. Run `backend/bin/migrate.php` and `backend/bin/create-admin.php`.

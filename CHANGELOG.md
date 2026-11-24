@@ -11,7 +11,8 @@ This project follows [Semantic Versioning](https://semver.org/).
 - Admin area with Argon2id passwords, TOTP two-factor authentication, and replay protection.
 - CSRF protection, rate limiting, server-side validation, and security headers.
 - Unit, integration, and functional tests, PHPStan, a committed test report, and GitHub Actions CI.
-- Full documentation, a security policy, and a security audit.
+- Documentation, a security policy, and a self-review security audit.
+- Session revocation on credential reset, IPv6 /64 rate limiting, and strict validation of the cookie security setting.
 
 ### Changed
 

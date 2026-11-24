@@ -269,4 +269,69 @@ final class ApplicationFlowTest extends TestCase
     {
         self::assertSame(404, $this->get('/missing-page')->status);
     }
+
+    private function resetCredentials(): string
+    {
+        $totp = new TotpVerifier();
+        $secret = $totp->generateSecret();
+        $repository = new PdoAdminRepository($this->pdo);
+        $admin = $repository->findByUsername('operator');
+        self::assertNotNull($admin);
+        $cipher = new FieldCipher((new KeyRing(str_repeat('m', 32)))->totpKey());
+        $repository->replaceCredentials(
+            $admin->id,
+            (new PasswordHasher(1024, 1, 1))->hash('a replacement password value'),
+            $cipher->encrypt($secret, AdminAuthenticator::totpContext('operator')),
+            $this->clock->now(),
+        );
+
+        return $totp->codeAt($secret, $this->clock->now());
+    }
+
+    public function testCredentialResetEndsExistingSessions(): void
+    {
+        $this->signIn();
+        self::assertSame(200, $this->get('/admin')->status);
+
+        $this->resetCredentials();
+
+        self::assertSame('/admin/login', $this->get('/admin')->headers['Location']);
+    }
+
+    public function testCredentialResetCancelsPendingSignIn(): void
+    {
+        $this->post('/admin/login', ['username' => 'operator', 'password' => self::PASSWORD]);
+
+        $newCode = $this->resetCredentials();
+
+        self::assertSame('/admin/login', $this->post('/admin/verify', ['code' => $newCode])->headers['Location']);
+        self::assertSame('/admin/login', $this->get('/admin')->headers['Location']);
+    }
+
+    public function testNewPasswordStepDropsPreviousAuthentication(): void
+    {
+        $this->signIn();
+        $this->post('/admin/login', ['username' => 'operator', 'password' => self::PASSWORD]);
+
+        self::assertSame('/admin/login', $this->get('/admin')->headers['Location']);
+    }
+
+    public function testIpv6ClientsInOneNetworkShareTheContactLimit(): void
+    {
+        for ($host = 1; $host <= 10; $host++) {
+            self::assertSame(303, $this->post('/contact', $this->contactFields(), '2001:db8:1:2::' . dechex($host))->status);
+        }
+
+        self::assertSame(429, $this->post('/contact', $this->contactFields(), '2001:db8:1:2::ff')->status);
+        self::assertSame(303, $this->post('/contact', $this->contactFields(), '2001:db8:1:3::1')->status);
+    }
+
+    public function testBlockedClientCannotGrowTheRateLimitTable(): void
+    {
+        for ($attempt = 0; $attempt < 30; $attempt++) {
+            $this->post('/admin/login', ['username' => 'user' . $attempt, 'password' => 'wrong password value']);
+        }
+
+        self::assertSame(11, (int) $this->pdo->query('SELECT COUNT(*) FROM rate_limits')?->fetchColumn());
+    }
 }

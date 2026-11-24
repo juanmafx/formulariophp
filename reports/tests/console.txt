@@ -3,6 +3,6 @@ PHPUnit 12.5.45 by Sebastian Bergmann and contributors.
 Runtime:       PHP 8.5.13
 Configuration: phpunit.xml
 
-Time: 00:00.466, Memory: 18.00 MB
+Time: 00:00.698, Memory: 18.00 MB
 
-OK (87 tests, 225 assertions)
+OK (103 tests, 261 assertions)

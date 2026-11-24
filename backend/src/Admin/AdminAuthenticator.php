@@ -18,10 +18,11 @@ final readonly class AdminAuthenticator
     private const string ADMIN_ID = 'admin_id';
     private const string AUTHENTICATED_AT = 'admin_authenticated_at';
     private const string LAST_SEEN_AT = 'admin_last_seen_at';
+    private const string CREDENTIAL_TAG = 'admin_credential_tag';
     private const int PENDING_TTL = 300;
     private const int IDLE_TTL = 900;
     private const int ABSOLUTE_TTL = 28800;
-    private const int MAX_PASSWORD_BYTES = 1024;
+    public const int MAX_PASSWORD_BYTES = 1024;
 
     public function __construct(
         private AdminRepository $admins,
@@ -59,8 +60,12 @@ final readonly class AdminAuthenticator
         }
 
         $this->session->regenerate();
+        $this->session->remove(self::ADMIN_ID);
+        $this->session->remove(self::AUTHENTICATED_AT);
+        $this->session->remove(self::LAST_SEEN_AT);
         $this->session->set(self::PENDING_ID, $admin->id);
         $this->session->set(self::PENDING_AT, $this->clock->now());
+        $this->session->set(self::CREDENTIAL_TAG, self::credentialTag($admin));
         $this->csrf->rotate();
 
         return true;
@@ -87,7 +92,10 @@ final readonly class AdminAuthenticator
     {
         $id = $this->pendingAdminId();
         $admin = $id === null ? null : $this->admins->findById($id);
-        if ($admin === null) {
+        if ($admin === null || !$this->holdsCurrentCredentials($admin)) {
+            $this->session->remove(self::PENDING_ID);
+            $this->session->remove(self::PENDING_AT);
+
             return false;
         }
 
@@ -119,7 +127,13 @@ final readonly class AdminAuthenticator
         }
 
         $now = $this->clock->now();
-        if ($now - $lastSeenAt > self::IDLE_TTL || $now - $authenticatedAt > self::ABSOLUTE_TTL || $this->admins->findById($id) === null) {
+        $admin = $this->admins->findById($id);
+        if (
+            $now - $lastSeenAt > self::IDLE_TTL
+            || $now - $authenticatedAt > self::ABSOLUTE_TTL
+            || $admin === null
+            || !$this->holdsCurrentCredentials($admin)
+        ) {
             $this->logout();
 
             return false;
@@ -134,5 +148,17 @@ final readonly class AdminAuthenticator
     {
         $this->session->clear();
         $this->csrf->rotate();
+    }
+
+    private function holdsCurrentCredentials(AdminUser $admin): bool
+    {
+        $tag = $this->session->get(self::CREDENTIAL_TAG);
+
+        return is_string($tag) && hash_equals(self::credentialTag($admin), $tag);
+    }
+
+    private static function credentialTag(AdminUser $admin): string
+    {
+        return hash('sha256', $admin->totpSecretEncrypted);
     }
 }

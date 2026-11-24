@@ -112,4 +112,23 @@ final class PersistenceTest extends TestCase
         self::assertSame(1, $store->hit($second, 10, 300));
         self::assertSame(1, (int) $this->pdo->query('SELECT COUNT(*) FROM rate_limits')?->fetchColumn());
     }
+
+    public function testNewDatabaseFileIsPrivateRegardlessOfUmask(): void
+    {
+        $directory = sys_get_temp_dir() . '/contact-db-' . bin2hex(random_bytes(4));
+        mkdir($directory, 0700);
+        $path = $directory . '/contact.sqlite';
+        $previousMask = umask(0022);
+
+        try {
+            DatabaseFactory::connect($path);
+            clearstatcache();
+            self::assertSame(0600, fileperms($path) & 0777);
+            self::assertSame(0022, umask(0022));
+        } finally {
+            umask($previousMask);
+            array_map(unlink(...), glob($path . '*') ?: []);
+            rmdir($directory);
+        }
+    }
 }

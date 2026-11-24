@@ -19,7 +19,7 @@ final class SecurityHeadersTest extends TestCase
         self::assertStringNotContainsString('unsafe', $headers['Content-Security-Policy']);
         self::assertSame('nosniff', $headers['X-Content-Type-Options']);
         self::assertSame('no-store', $headers['Cache-Control']);
-        self::assertArrayHasKey('Strict-Transport-Security', $headers);
+        self::assertSame('max-age=31536000', $headers['Strict-Transport-Security']);
     }
 
     public function testOmitsHstsOutsideHttps(): void
