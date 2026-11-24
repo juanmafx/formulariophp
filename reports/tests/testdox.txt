@@ -1,0 +1,111 @@
+App Config (ContactForm\Tests\Unit\AppConfig)
+ [x] Loads valid configuration with secure cookies by default
+ [x] Allows disabling secure cookies explicitly
+ [x] Rejects invalid configuration with data set "empty key"
+ [x] Rejects invalid configuration with data set "short key"
+ [x] Rejects invalid configuration with data set "non base64 key"
+ [x] Rejects invalid configuration with data set "missing database"
+ [x] Rejects invalid configuration with data set "missing dsn"
+ [x] Rejects invalid configuration with data set "invalid sender"
+ [x] Rejects invalid configuration with data set "invalid recipient"
+
+Application Flow (ContactForm\Tests\Functional\ApplicationFlow)
+ [x] Contact page is english and carries csrf and security headers
+ [x] Rejects post without csrf token
+ [x] Valid submission is encrypted mailed and confirmed once
+ [x] Mail failure keeps the submission and marks it failed
+ [x] Invalid submission is rejected and escaped
+ [x] Contact endpoint is rate limited
+ [x] Admin requires authentication
+ [x] Password alone does not grant access
+ [x] Wrong password and unknown user share the same response
+ [x] Full two factor sign in reveals decrypted and escaped submissions
+ [x] Wrong code is rejected
+ [x] Totp code cannot be replayed
+ [x] Second factor attempts are rate limited
+ [x] Login attempts are rate limited
+ [x] Pending second factor expires
+ [x] Idle session expires
+ [x] Logout ends the session
+ [x] Unknown route returns 404
+
+Attachment Validator (ContactForm\Tests\Unit\AttachmentValidator)
+ [x] Accepts allowed type and derives extension from content
+ [x] Sanitizes path traversal and header characters in names
+ [x] Rejects executable content regardless of extension
+ [x] Rejects oversized and empty files
+ [x] Reports upload errors
+
+Contact Validator (ContactForm\Tests\Unit\ContactValidator)
+ [x] Accepts valid input and normalizes line endings
+ [x] Accepts non ascii names
+ [x] Rejects invalid field with data set "empty name"
+ [x] Rejects invalid field with data set "long name"
+ [x] Rejects invalid field with data set "name array"
+ [x] Rejects invalid field with data set "invalid utf8"
+ [x] Rejects invalid field with data set "email header injection lf"
+ [x] Rejects invalid field with data set "email header injection crlf"
+ [x] Rejects invalid field with data set "malformed email"
+ [x] Rejects invalid field with data set "long email"
+ [x] Rejects invalid field with data set "phone letters"
+ [x] Rejects invalid field with data set "short phone"
+ [x] Rejects invalid field with data set "subject header injection"
+ [x] Rejects invalid field with data set "subject unicode line separator"
+ [x] Rejects invalid field with data set "subject null byte"
+ [x] Rejects invalid field with data set "long subject"
+ [x] Rejects invalid field with data set "empty message"
+ [x] Rejects invalid field with data set "long message"
+ [x] Rejects invalid field with data set "message control character"
+
+Csrf Token Manager (ContactForm\Tests\Unit\CsrfTokenManager)
+ [x] Issues a stable high entropy token
+ [x] Rejects missing and wrong tokens
+ [x] Rotation invalidates the previous token
+
+Field Cipher (ContactForm\Tests\Unit\FieldCipher)
+ [x] Round trips unicode plaintext
+ [x] Uses a fresh nonce for every encryption
+ [x] Rejects ciphertext moved to another context
+ [x] Rejects tampered ciphertext
+ [x] Rejects a wrong key
+ [x] Rejects unknown version and malformed payloads
+ [x] Key ring derives distinct stable subkeys
+
+Password Hasher (ContactForm\Tests\Unit\PasswordHasher)
+ [x] Produces salted argon 2id hashes
+ [x] Default parameters meet the documented cost
+ [x] Detects hashes that need rehashing
+
+Persistence (ContactForm\Tests\Integration\Persistence)
+ [x] Schema is idempotent
+ [x] Stores only ciphertext and round trips
+ [x] Paginates newest first
+ [x] Schema rejects plaintext and non argon hashes
+ [x] Schema rejects plaintext submission fields
+ [x] Admin lookup is case insensitive and totp step only advances
+ [x] Rate limit store counts resets and prunes
+
+Rate Limiter (ContactForm\Tests\Unit\RateLimiter)
+ [x] Blocks after the limit and recovers after the window
+ [x] Isolates buckets and identifiers
+ [x] Stores only keyed hashes of identifiers
+
+Security Headers (ContactForm\Tests\Unit\SecurityHeaders)
+ [x] Applies restrictive policy
+ [x] Omits hsts outside https
+
+Symfony Contact Mailer (ContactForm\Tests\Unit\SymfonyContactMailer)
+ [x] Uses fixed sender and visitor as reply to
+ [x] Attaches the validated file under its safe name
+ [x] Wraps transport failures
+ [x] Wraps addresses the mime layer rejects
+
+Totp Verifier (ContactForm\Tests\Unit\TotpVerifier)
+ [x] Matches rfc 6238 reference vectors
+ [x] Accepts current and adjacent steps
+ [x] Rejects codes outside the drift window
+ [x] Rejects replay of an accepted step
+ [x] Rejects malformed codes
+ [x] Generates a provisioning uri for a new secret
+ [x] Rejects an empty secret
+

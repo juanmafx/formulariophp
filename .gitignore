@@ -1,0 +1,10 @@
+/vendor/
+/var/
+/.env
+/.env.*
+!/.env.example
+/.phpunit.cache/
+/.phpunit.result.cache
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
